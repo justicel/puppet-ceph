@@ -64,6 +64,7 @@ class ceph::rgw (
   $rgw_secret,
   $rgw_region                   = '',
   $rgw_zone                     = '',
+  $auto_start                   = true,
   $rgw_name                     = $name,
   $rgw_region_enable            = false,
   $configure_apache             = true,

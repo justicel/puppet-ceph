@@ -22,6 +22,12 @@
   keyring = /var/lib/ceph/radosgw/keyring.rgw
   rgw socket path = /tmp/radosgw.sock
   log file = /var/log/ceph/radosgw.log
+<% if auto_start -%>
+  auto start true
+<% else -%>
+  auto start false
+<% end -%>
+
 
 <% if @keystone -%>
   rgw keystone url = <%= @keystone_url %>
