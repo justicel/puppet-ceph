@@ -76,12 +76,31 @@ class ceph::rgw (
   $debug_log                    = false
 ) {
 
+  #Manage apache and vhost configurations if we specify to do so
   if $configure_apache {
     class { 'apache': }
 
     #Modules necessary for rgw support on apache
     class { 'apache::mod::fastcgi': }
     class { 'apache::mod::ssl': }
+    class { 'apache::mod::rewrite': }
+
+    #RGW vhost
+    apache::vhost { $::hostname:
+      port           => '443',
+      docroot        => '/var/www',
+      ssl            => true,
+      fastcgi_server => '/var/www/s3gw.fcgi',
+      fastcgi_socket => '/tmp/radosgw.sock',
+      fastcgi_dir    => '/var/www',
+      serveraliases  => [$::ipaddress,], 
+      rewrites       => [
+        {
+          comment      => 'Rewrite rule for s3 compatibility',
+          rewrite_rule => ['^/([a-zA-Z0-9-_.]*)([/]?.*) /s3gw.fcgi?page=$1&params=$2&%{QUERY_STRING} [E=HTTP_AUTHORIZATION:%{HTTP:Authorization},L'],
+        }
+       ],
+    }
   }
 
   ensure_packages( [ 'radosgw', 'ceph-common', 'ceph' ] )
