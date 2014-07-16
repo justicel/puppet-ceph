@@ -36,7 +36,9 @@ class ceph::osd (
 
   ensure_packages( [ 'xfsprogs', 'parted' ] )
 
-  if ! defined(Ceph::Key['client.admin']) {
+  if defined(Ceph::Key['client.admin']) {
+  }
+  else {
     ceph::key { 'client.admin':
       secret         => $client_admin_secret,
       keyring_path   => '/etc/ceph/keyring',
