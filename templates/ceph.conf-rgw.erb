@@ -19,7 +19,7 @@
 <% end -%>
 
   host = <%= @server_name %>
-  keyring = /var/lib/ceph/radosgw/<%= @name %>keyring.rgw
+  keyring = /var/lib/ceph/radosgw/<%= @name %>-keyring.rgw
   rgw socket path = /tmp/radosgw.sock
   log file = /var/log/ceph/radosgw.log
 <% if auto_start -%>
