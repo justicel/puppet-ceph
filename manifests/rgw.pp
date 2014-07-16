@@ -78,7 +78,9 @@ class ceph::rgw (
 
   #Manage apache and vhost configurations if we specify to do so
   if $configure_apache {
-    class { 'apache': }
+    class { 'apache':
+      default_vhost => false,
+    }
 
     #Modules necessary for rgw support on apache
     class { 'apache::mod::fastcgi': }
@@ -90,6 +92,7 @@ class ceph::rgw (
       port           => '443',
       docroot        => '/var/www',
       ssl            => true,
+      options        => ['FollowSymlinks'],
       fastcgi_server => '/var/www/s3gw.fcgi',
       fastcgi_socket => '/tmp/radosgw.sock',
       fastcgi_dir    => '/var/www',
