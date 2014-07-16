@@ -90,6 +90,7 @@ class ceph::rgw (
     #RGW vhosts
     apache::vhost { $::hostname:
     port           => '80',
+    docroot        => '/var/www',
     serveraliases  => [$::ipaddress, $::fqdn,],
     rewrites       => [
       {
