@@ -28,7 +28,7 @@
 
 class ceph::osd (
   $client_admin_secret,
-  $no_osdkey       = false,
+  $osdkey          = true,
   $public_address  = $::ipaddress,
   $cluster_address = $::ipaddress,
 ) {
