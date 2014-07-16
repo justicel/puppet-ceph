@@ -109,7 +109,7 @@ class ceph::rgw (
       fastcgi_server => '/var/www/s3gw.fcgi',
       fastcgi_socket => '/tmp/radosgw.sock',
       fastcgi_dir    => '/var/www',
-      serveraliases  => [$::ipaddress, $::fqdn,], 
+      serveraliases  => [$::ipaddress, $::fqdn, "*.${::fqdn}", "*.${::hostname}"], 
       rewrites       => [
         {
           comment      => 'Rewrite rule for s3 compatibility',
