@@ -97,7 +97,7 @@ class ceph::rgw (
       rewrites       => [
         {
           comment      => 'Rewrite rule for s3 compatibility',
-          rewrite_rule => ['^/([a-zA-Z0-9-_.]*)([/]?.*) /s3gw.fcgi?page=$1&params=$2&%{QUERY_STRING} [E=HTTP_AUTHORIZATION:%{HTTP:Authorization},L'],
+          rewrite_rule => ['^/([a-zA-Z0-9-_.]*)([/]?.*) /s3gw.fcgi?page=$1&params=$2&%{QUERY_STRING} [E=HTTP_AUTHORIZATION:%{HTTP:Authorization},L]'],
         }
        ],
     }
