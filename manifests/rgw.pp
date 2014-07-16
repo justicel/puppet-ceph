@@ -103,6 +103,7 @@ class ceph::rgw (
     apache::vhost { "${::hostname}-ssl":
       servername     => $::hostname,
       port           => '443',
+      setenv         => ['SERVER_PORT_SECURE 443'],
       docroot        => '/var/www',
       ssl            => true,
       options        => ['FollowSymlinks'],
