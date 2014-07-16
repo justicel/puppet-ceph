@@ -54,11 +54,13 @@ define ceph::mds (
     before  => Ceph::Key["mds.${name}"]
   }
 
-  ceph::key { 'client.admin':
-    secret         => $client_admin_secret,
-    keyring_path   => '/etc/ceph/keyring',
-    require        => Package['ceph']
-  }
+  if ! defined(Ceph::Key['client.admin']) {
+    ceph::key { 'client.admin':
+      secret         => $client_admin_secret,
+      keyring_path   => '/etc/ceph/keyring',
+      require        => Package['ceph']
+    }
+  } 
 
   ceph::key { "mds.${name}":
     secret         => $mds_secret,

@@ -62,7 +62,10 @@ class ceph::rgw (
   $fsid,
   $admin_secret,
   $rgw_secret,
-  $client_admin_key             = true,
+  $rgw_region,
+  $rgw_zone,
+  $rgw_name                     = $name,
+  $rgw_region_enable            = false,
   $configure_apache             = true,
   $rgw_data                     = '/var/lib/ceph/radosgw',
   $fcgi_file                    = '/var/www/s3gw.fcgi',
@@ -126,6 +129,14 @@ class ceph::rgw (
     fail('Keystone integration activated but keystone_url is not set')
   }
 
+  if ! defined(File['/var/lib/ceph/radosgw']) {
+    file { '/var/lib/ceph/radosgw':
+      ensure => directory,
+      owner  => 'root',
+      group  => 0,
+      mode   => '0755',
+    }
+  } ->
   file { $::ceph::rgw::rgw_data:
     ensure  => directory,
     owner   => 'root',
@@ -133,9 +144,9 @@ class ceph::rgw (
     mode    => '0755',
   }
 
-  ceph::conf::rgw {$name:}
+  ceph::conf::rgw {$rgw_name:}
 
-  if $client_admin_key {
+  if ! defined(Ceph::Key['client.admin']) {
     ceph::key { 'client.admin':
       secret         => $admin_secret,
       keyring_path   => '/etc/ceph/keyring',
@@ -143,7 +154,7 @@ class ceph::rgw (
     }
   }
 
-  ceph::key { 'client.radosgw.gateway':
+  ceph::key { "client.radosgw.${rgw_name}":
     secret         => $rgw_secret,
     keyring_path   => '/var/lib/ceph/radosgw/keyring.rgw',
     cap_mon        => 'allow rw',
@@ -157,8 +168,8 @@ class ceph::rgw (
   file { $fcgi_file:
     owner   => 'root',
     mode    => '0755',
-    content => '#!/bin/sh
-exec /usr/bin/radosgw -c /etc/ceph/ceph.conf -n client.radosgw.gateway',
+    content => "#!/bin/sh
+exec /usr/bin/radosgw -c /etc/ceph/ceph.conf -n client.radosgw.${rgw_name}",
     require => File['/var/www'],
   }
 
@@ -170,7 +181,7 @@ exec /usr/bin/radosgw -c /etc/ceph/ceph.conf -n client.radosgw.gateway',
     provider  => 'init',
     require   => [
       Package['ceph'],
-      Ceph::Key['client.radosgw.gateway'],
+      Ceph::Key["client.radosgw.${rgw_name}"],
       Concat['/etc/ceph/ceph.conf'],
       File[$::ceph::rgw::rgw_data],
     ],

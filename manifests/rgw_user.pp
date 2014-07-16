@@ -44,7 +44,7 @@ class ceph::rgw_user (
     command => "radosgw-admin user create --uid=${user} \
  ${key_opt} --display-name ${user}",
     require => Service['radosgw'],
-    unless  => 'radosgw-admin user info --uid=admin'
+    unless  => "radosgw-admin user info --uid=${user}"
   }
 
   if ($swift_user){
@@ -61,7 +61,7 @@ class ceph::rgw_user (
 ${swift_key_opt} --display-name ${swift_user} \
 --key-type swift --access=full",
       require => Exec['add-user'] ,
-      unless  => "radosgw-admin user info --uid=admin|grep admin:${swift_user}"
+      unless  => "radosgw-admin user info --uid=${user}|grep ${user}:${swift_user}"
     }
   }
 }

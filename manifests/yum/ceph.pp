@@ -1,5 +1,5 @@
 class ceph::yum::ceph (
-  $release = 'cuttlefish'
+  $release = 'firefly'
 ) {
   yumrepo { 'ceph':
     descr    => "Ceph ${release} repository",
@@ -9,6 +9,6 @@ class ceph::yum::ceph (
     gpgcheck => 1,
     enabled  => 1,
     priority => 5,
-    before   => Package['ceph'],
+    before   => [Package['ceph'], Package['ceph-common'],],
   }
 }

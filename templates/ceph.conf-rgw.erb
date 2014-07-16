@@ -1,4 +1,11 @@
-[client.radosgw.gateway]
+[client.radosgw.<%= @rgw_name %>]
+<% if @rgw_region_enable -%>
+  rgw region = <%= @rgw_region %>
+  rgw region root pool = .<%= @rgw_region %>.rgw.root
+  rgw zone = <%= @rgw_zone %>
+  rgw zone root pool = .<%= @rgw_zone %>.rgw.root
+<% end -%>  
+
   # Need this parameter for the default apache2 packages
   rgw print continue = false
   
@@ -12,7 +19,7 @@
 <% end -%>
 
   host = <%= @hostname %>
-  keyring = <%= @rgw_data %>/keyring.rgw
+  keyring = /var/lib/ceph/radosgw/keyring.rgw
   rgw socket path = /tmp/radosgw.sock
   log file = /var/log/ceph/radosgw.log
 
