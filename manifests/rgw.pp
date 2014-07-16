@@ -136,7 +136,7 @@ class ceph::rgw (
       group  => 0,
       mode   => '0755',
     }
-  } ->
+  }
   file { $::ceph::rgw::rgw_data:
     ensure  => directory,
     owner   => 'root',
