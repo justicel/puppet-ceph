@@ -62,8 +62,8 @@ class ceph::rgw (
   $fsid,
   $admin_secret,
   $rgw_secret,
-  $rgw_region,
-  $rgw_zone,
+  $rgw_region                   = '',
+  $rgw_zone                     = '',
   $rgw_name                     = $name,
   $rgw_region_enable            = false,
   $configure_apache             = true,
@@ -76,7 +76,7 @@ class ceph::rgw (
   $keystone_token_cache_size    = 10,
   $keystone_revocation_interval = 60,
   $nss_db_path                  = '/var/lib/ceph/nss',
-  $debug_log                    = false
+  $debug_log                    = false,
 ) {
 
   #Manage apache and vhost configurations if we specify to do so
