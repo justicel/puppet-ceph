@@ -166,7 +166,7 @@ class ceph::rgw (
 
   ceph::key { "client.radosgw.${rgw_name}":
     secret         => $rgw_secret,
-    keyring_path   => '/var/lib/ceph/radosgw/keyring.rgw',
+    keyring_path   => "/var/lib/ceph/radosgw/${rgw_name}-keyring.rgw",
     cap_mon        => 'allow rw',
     cap_osd        => 'allow rwx',
     inject         => true,
