@@ -1,4 +1,5 @@
 define ceph::conf::mon (
+  $fsid,
   $mon_addr,
   $mon_port,
 ) {
@@ -7,6 +8,7 @@ define ceph::conf::mon (
     target  => '/etc/ceph/ceph.conf',
     order   => '50',
     content => template('ceph/ceph.conf-mon.erb'),
+    tag     => $fsid,
   }
 
 }

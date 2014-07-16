@@ -143,7 +143,7 @@ class ceph::conf (
     require => Package['ceph'],
   }
 
-  Concat::Fragment <<| target == '/etc/ceph/ceph.conf' |>>
+  Concat::Fragment <<| target == '/etc/ceph/ceph.conf' and tag == $fsid |>>
 
   concat::fragment { 'ceph.conf':
     target  => '/etc/ceph/ceph.conf',

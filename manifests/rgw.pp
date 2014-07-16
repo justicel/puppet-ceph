@@ -167,7 +167,12 @@ exec /usr/bin/radosgw -c /etc/ceph/ceph.conf -n client.radosgw.gateway',
     stop      => '/etc/init.d/radosgw stop',
     hasstatus => false,
     provider  => 'init',
-    require   => [ Package['ceph'], Ceph::Key['client.radosgw.gateway'] ]
+    require   => [
+      Package['ceph'],
+      Ceph::Key['client.radosgw.gateway'],
+      Ceph::Conf::Rgw[$name],
+      File[$::ceph::rgw::rgw_data],
+    ],
   }
 
 }
