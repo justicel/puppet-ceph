@@ -63,6 +63,7 @@ class ceph::rgw (
   $admin_secret,
   $rgw_secret,
   $client_admin_key             = true,
+  $configure_apache             = true,
   $rgw_data                     = '/var/lib/ceph/radosgw',
   $fcgi_file                    = '/var/www/s3gw.fcgi',
   $keystone                     = false,
@@ -74,6 +75,15 @@ class ceph::rgw (
   $nss_db_path                  = '/var/lib/ceph/nss',
   $debug_log                    = false
 ) {
+
+  if $configure_apache {
+    class { 'apache': }
+
+    #Modules necessary for rgw support on apache
+    class { 'apache::mod::fastcgi': }
+    class { 'apache::mod::ssl': }
+  }
+
   ensure_packages( [ 'radosgw', 'ceph-common', 'ceph' ] )
 
   if $keystone and !$keystone_url {
@@ -112,7 +122,8 @@ class ceph::rgw (
     owner   => 'root',
     mode    => '0755',
     content => '#!/bin/sh
-exec /usr/bin/radosgw -c /etc/ceph/ceph.conf -n client.radosgw.gateway'
+exec /usr/bin/radosgw -c /etc/ceph/ceph.conf -n client.radosgw.gateway',
+    require => File['/var/www'],
   }
 
   service { 'radosgw':
