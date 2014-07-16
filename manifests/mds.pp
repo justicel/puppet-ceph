@@ -32,8 +32,9 @@
 define ceph::mds (
   $client_admin_secret,
   $mds_secret,
-  $mds_data = '/var/lib/ceph/mds',
-  $fsid     = $::ceph::conf::fsid,
+  $mds_data    = '/var/lib/ceph/mds',
+  $fsid        = $::ceph::conf::fsid,
+  $install_key = true,
 ) {
 
   include 'ceph::conf'
@@ -54,7 +55,7 @@ define ceph::mds (
     before  => Ceph::Key["mds.${name}"]
   }
 
-  if ! defined(Ceph::Key['client.admin']) {
+  if $install_key {
     ceph::key { 'client.admin':
       secret         => $client_admin_secret,
       keyring_path   => '/etc/ceph/keyring',

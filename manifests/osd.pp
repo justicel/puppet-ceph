@@ -30,15 +30,14 @@ class ceph::osd (
   $client_admin_secret,
   $public_address  = $::ipaddress,
   $cluster_address = $::ipaddress,
+  $install_key     = true
 ) {
 
   include 'ceph::package'
 
   ensure_packages( [ 'xfsprogs', 'parted' ] )
 
-  if defined(Ceph::Key['client.admin']) {
-  }
-  else {
+  if $install_key {
     ceph::key { 'client.admin':
       secret         => $client_admin_secret,
       keyring_path   => '/etc/ceph/keyring',

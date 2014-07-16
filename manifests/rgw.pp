@@ -77,6 +77,7 @@ class ceph::rgw (
   $keystone_revocation_interval = 60,
   $nss_db_path                  = '/var/lib/ceph/nss',
   $debug_log                    = false,
+  $install_key                  = true,
 ) {
 
   #Manage apache and vhost configurations if we specify to do so
@@ -146,7 +147,7 @@ class ceph::rgw (
 
   ceph::conf::rgw {$rgw_name:}
 
-  if ! defined(Ceph::Key['client.admin']) {
+  if $install_key {
     ceph::key { 'client.admin':
       secret         => $admin_secret,
       keyring_path   => '/etc/ceph/keyring',
