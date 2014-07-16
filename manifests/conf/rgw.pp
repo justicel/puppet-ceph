@@ -1,8 +1,10 @@
 define ceph::conf::rgw (
-  $rgw_region_enable = false,
-  $rgw_region        = '',
-  $rgw_zone          = '',
-  $auto_start        = true,
+  $rgw_region_enable,
+  $rgw_region,
+  $rgw_zone,
+  $debug_log,
+  $server_name,
+  $auto_start,
 ) {
 
   concat::fragment { "ceph-rgw-${name}.conf":

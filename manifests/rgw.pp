@@ -79,6 +79,7 @@ class ceph::rgw (
   $nss_db_path                  = '/var/lib/ceph/nss',
   $debug_log                    = false,
   $install_key                  = true,
+  $server_name                  = $::hostname,
 ) {
 
   #Manage apache and vhost configurations if we specify to do so
@@ -146,7 +147,14 @@ class ceph::rgw (
     mode    => '0755',
   }
 
-  ceph::conf::rgw {$rgw_name:}
+  ceph::conf::rgw {$rgw_name:
+    rgw_region_enable => $rgw_region_enable,
+    rgw_region        => $rgw_region,
+    rgw_zone          => $rgw_zone,
+    debug_log         => $debug_log,
+    server_name       => $server_name,
+    auto_start        => $auto_start,
+  }
 
   if $install_key {
     ceph::key { 'client.admin':
