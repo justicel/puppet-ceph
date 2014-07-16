@@ -33,6 +33,7 @@ define ceph::mds (
   $client_admin_secret,
   $mds_secret,
   $mds_data = '/var/lib/ceph/mds',
+  $fsid     = $::ceph::conf::fsid,
 ) {
 
   include 'ceph::conf'
@@ -73,6 +74,7 @@ define ceph::mds (
 
   ceph::conf::mds { $name:
     mds_data => $mds_data,
+    fsid     => $fsid,
     before   => Service["ceph-mds.${name}"]
   }
 

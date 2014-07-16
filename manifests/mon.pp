@@ -33,7 +33,8 @@ define ceph::mon (
   $monitor_secret,
   $client_admin_secret,
   $mon_port = 6789,
-  $mon_addr = $ipaddress
+  $mon_addr = $ipaddress,
+  $fsid     = $::ceph::conf::fsid,
 ) {
 
   include 'ceph::package'
@@ -45,6 +46,7 @@ define ceph::mon (
   ceph::conf::mon { $name:
     mon_addr => $mon_addr,
     mon_port => $mon_port,
+    fsid     => $fsid
   }
 
   #FIXME: monitor_secret will appear in "ps" output …
