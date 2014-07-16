@@ -28,6 +28,7 @@
 
 class ceph::osd (
   $client_admin_secret,
+  $no_osdkey       = false,
   $public_address  = $::ipaddress,
   $cluster_address = $::ipaddress,
 ) {
@@ -36,10 +37,12 @@ class ceph::osd (
 
   ensure_packages( [ 'xfsprogs', 'parted' ] )
 
-  ceph::key { 'client.admin':
-    secret         => $client_admin_secret,
-    keyring_path   => '/etc/ceph/keyring',
-    require        => Package['ceph'],
+  if $no_osdkey {
+    ceph::key { 'client.admin':
+      secret         => $client_admin_secret,
+      keyring_path   => '/etc/ceph/keyring',
+      require        => Package['ceph'],
+    }
   }
 }
 
