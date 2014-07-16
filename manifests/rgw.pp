@@ -62,6 +62,7 @@ class ceph::rgw (
   $fsid,
   $admin_secret,
   $rgw_secret,
+  $client_admin_key             = true,
   $rgw_data                     = '/var/lib/ceph/radosgw',
   $fcgi_file                    = '/var/www/s3gw.fcgi',
   $keystone                     = false,
@@ -88,10 +89,12 @@ class ceph::rgw (
 
   ceph::conf::rgw {$name:}
 
-  ceph::key { 'client.admin':
-    secret         => $admin_secret,
-    keyring_path   => '/etc/ceph/keyring',
-    require        => Package['ceph']
+  if $client_admin_key {
+    ceph::key { 'client.admin':
+      secret         => $admin_secret,
+      keyring_path   => '/etc/ceph/keyring',
+      require        => Package['ceph']
+    }
   }
 
   ceph::key { 'client.radosgw.gateway':
