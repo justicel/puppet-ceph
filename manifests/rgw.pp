@@ -87,8 +87,20 @@ class ceph::rgw (
     class { 'apache::mod::ssl': }
     class { 'apache::mod::rewrite': }
 
-    #RGW vhost
+    #RGW vhosts
     apache::vhost { $::hostname:
+    port           => '80',
+    serveraliases  => [$::ipaddress, $::fqdn,],
+    rewrites       => [
+      {
+        comment      => "redirect non-SSL traffic to SSL site",
+        rewrite_cond => ['%{HTTPS} off'],
+        rewrite_rule => ['(.*) https://%{HTTPS_HOST}%{REQUEST_URI}']
+      }
+      ],
+    }
+    apache::vhost { "${::hostname}-ssl":
+      servername     => $::hostname,
       port           => '443',
       docroot        => '/var/www',
       ssl            => true,
