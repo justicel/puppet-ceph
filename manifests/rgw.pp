@@ -95,15 +95,18 @@ class ceph::rgw (
 
     #RGW vhosts
     apache::vhost { $::hostname:
-    port           => '80',
-    docroot        => '/var/www',
-    serveraliases  => [$::ipaddress, $::fqdn,],
-    rewrites       => [
-      {
-        comment      => "redirect non-SSL traffic to SSL site",
-        rewrite_cond => ['%{HTTPS} off'],
-        rewrite_rule => ['(.*) https://%{SERVER_NAME}%{REQUEST_URI}']
-      }
+      port           => '80',
+      docroot        => '/var/www',
+      options        => ['FollowSymlinks'],
+      fastcgi_server => '/var/www/s3gw.fcgi',
+      fastcgi_socket => '/tmp/radosgw.sock',
+      fastcgi_dir    => '/var/www',
+      serveraliases  => [$::ipaddress, $::fqdn, "*.${::fqdn}", "*.${::hostname}"],
+      rewrites       => [
+        {
+          comment      => 'Rewrite rule for s3 compatibility',
+          rewrite_rule => ['^/([a-zA-Z0-9-_.]*)([/]?.*) /s3gw.fcgi?page=$1&params=$2&%{QUERY_STRING} [E=HTTP_AUTHORIZATION:%{HTTP:Authorization},L]'],
+        }
       ],
     }
     apache::vhost { "${::hostname}-ssl":
@@ -122,7 +125,7 @@ class ceph::rgw (
           comment      => 'Rewrite rule for s3 compatibility',
           rewrite_rule => ['^/([a-zA-Z0-9-_.]*)([/]?.*) /s3gw.fcgi?page=$1&params=$2&%{QUERY_STRING} [E=HTTP_AUTHORIZATION:%{HTTP:Authorization},L]'],
         }
-       ],
+      ],
     }
   }
 
