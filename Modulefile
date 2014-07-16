@@ -8,6 +8,6 @@ description 'A puppet module to install & configure Ceph'
 project_page 'https://github.com/enovance/puppet-ceph'
 
 dependency 'puppetlabs/apt', '>= 1.1.0'
-dependency 'puppetlabs/concat', '>= 1.1.0'
+dependency 'puppetlabs/concat', '>= 1.0.0'
 dependency 'puppetlabs/stdlib', '>= 4.1.0'
 dependency 'puppetlabs/apache', '>= 1.1.0'
