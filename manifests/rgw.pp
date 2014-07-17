@@ -98,8 +98,6 @@ class ceph::rgw (
       port           => '80',
       docroot        => '/var/www',
       options        => ['FollowSymlinks'],
-      fastcgi_server => '/var/www/s3gw.fcgi',
-      fastcgi_socket => '/tmp/radosgw.sock',
       fastcgi_dir    => '/var/www',
       serveraliases  => [$::ipaddress, $::fqdn, "*.${::fqdn}", "*.${::hostname}"],
       rewrites       => [
