@@ -28,7 +28,7 @@
 #
 
 
-class ceph::rgw_user (
+define ceph::rgw_user (
   $user = 'admin',
   $key  = '--gen-secret',
   $swift_user = undef,
