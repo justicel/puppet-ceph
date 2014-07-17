@@ -29,10 +29,11 @@
 
 
 define ceph::rgw_user (
-  $user = 'admin',
-  $key  = '--gen-secret',
+  $user       = 'admin',
+  $key        = '--gen-secret',
   $swift_user = undef,
   $swift_key  = '--gen-secret',
+  $rgwname    = 'gateway',
 ) {
   if $key != '--gen-secret'{
     $key_opt = "--secret ${key}"
@@ -42,9 +43,9 @@ define ceph::rgw_user (
 
   exec { 'add-user':
     command => "radosgw-admin user create --uid=${user} \
- ${key_opt} --display-name ${user}",
+ ${key_opt} --display-name ${user} --name=client.radosgw.${rgwname}",
     require => Service['radosgw'],
-    unless  => "radosgw-admin user info --uid=${user}"
+    unless  => "radosgw-admin user info --uid=${user} --name=client.radosgw.${rgwname}"
   }
 
   if ($swift_user){
@@ -54,6 +55,8 @@ define ceph::rgw_user (
     } else{
       $swift_key_opt = $swift_key
     }
+
+  if $rgwname {
 
     exec { 'add-swift-subuser':
       command => "radosgw-admin subuser create \
