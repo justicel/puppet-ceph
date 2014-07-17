@@ -56,8 +56,6 @@ define ceph::rgw_user (
       $swift_key_opt = $swift_key
     }
 
-  if $rgwname {
-
     exec { 'add-swift-subuser':
       command => "radosgw-admin subuser create \
 --uid=${user} --subuser=${swift_user} \
