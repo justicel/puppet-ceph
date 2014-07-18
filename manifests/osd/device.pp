@@ -161,6 +161,7 @@ define ceph::osd::device (
       exec { "ceph-osd-register-${osd_id}":
         command => "ceph auth add osd.${osd_id} osd 'allow *' mon 'allow rwx' -i ${osd_data}/keyring",
         require => Exec["ceph-osd-mkfs-${osd_id}"],
+        unless  => "ceph auth print-key osd.${osd_id}",
       }
 
       exec { "ceph-osd-crush-add-${osd_id}":
